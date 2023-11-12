@@ -9,9 +9,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to Task Tracker {% endblock %}</h1>
-<h2>this is a learning project</h2>
-{% endblock %}
 
+    <h1>My List</h1>
+    <ul>
+        {% for item in my_list %}
+            <li>
+                <input type="checkbox" {% if item.checked %}checked{% endif %}
+                       onclick="window.location.href='{{ url_for('toggle_item', item_index=loop.index-1) }}'">
+                {{ item.item }}
+                <a href="{{ url_for('remove_item', item_index=loop.index-1) }}">Remove</a>
+                <a href="{{ url_for('complete_item', item_index=loop.index-1) }}">Complete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h2>Completed Items</h2>
+    <ul>
+        {% for item in completed_list %}
+            <li>
+                {{ item.item }}
+                <a href="{{ url_for('uncomplete_item', item_index=loop.index-1) }}">Uncomplete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <form method="post" action="{{ url_for('add_item') }}">
+        <label for="new_item">Add Item:</label>
+        <input type="text" id="new_item" name="new_item" required>
+        <button type="submit">Add</button>
+    </form>
+{% endblock %}
 </body>
 </html>
